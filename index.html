@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自作人工言語辞書</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="単語を検索 (部分一致)...">
+            </div>
+            <ul id="wordList" class="word-list">
+                </ul>
+        </aside>
+
+        <main class="content">
+            <div id="wordDetail" class="word-detail hidden">
+                <h1 id="detailWord"></h1>
+                <div id="detailOriginalFont" class="original-font-container"></div>
+                <div class="meaning-box">
+                    <h3>意味:</h3>
+                    <p id="detailMeaning"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="placeholder">
+                <p>左のリストから単語を選択してください。</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
