@@ -1,26 +1,25 @@
 // --- 1. スプライトフォントの文字マッピング設定 ---
-// 画像のどこにどの文字があるかを定義します。
-// (例: 'a'は0番目(左上), 'b'は1番目...)
-// 18列(0~17) x 6行の画像として計算します。
+// 1音節（ローマ字の塊）ごとに画像の位置（0から始まる番号）を定義します。
 const charMap = {
-    'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,
-    'g': 6, 'h': 7, 'i': 8, 'j': 9, 'k': 10, 'l': 11,
-    'm': 12, 'n': 13, 'o': 14, 'p': 15, 'q': 16, 'r': 17,
-    's': 18, 't': 19, 'u': 20, 'v': 21, 'w': 22, 'x': 23,
-    'y': 24, 'z': 25
-    // 記号などがあれば追加してください
+    'a': 0, 'ya': 1, 'ta': 2, 'la': 3, 'ka': 4, 'pa': 5, 'ha': 6, 'sa': 7, 'na': 8, 'ma': 9, 'tya': 10, 'lya': 11, 'kya': 12, 'pya': 13, 'hya': 14, 'sya': 15, 'mya': 16, 'pha': 17,
+    'i': 18, 'yi': 19, 'ti': 20, 'li': 21, 'ki': 22, 'pi': 23, 'hi': 24, 'si': 25, 'ni': 26, 'mi': 27, 'tyi': 28, 'lyi': 29, 'kyi': 30, 'pyi': 31, 'hyi': 32, 'syi': 33, 'myi': 34, 'phi': 35,
+    'u': 36, 'yu': 37, 'tu': 38, 'lu': 39, 'ku': 40, 'pu': 41, 'hu': 42, 'su': 43, 'nu': 44, 'mu': 45, 'tyu': 46, 'lyu': 47, 'kyu': 48, 'pyu': 49, 'hyu': 50, 'syu': 51, 'myu': 52, 'phu': 53,
+    'e': 54, 'ye': 55, 'te': 56, 'le': 57, 'ke': 58, 'pe': 59, 'he': 60, 'se': 61, 'ne': 62, 'me': 63, 'tyi': 64, 'lyi': 65, 'kyi': 66, 'pyi': 67, 'hyi': 68, 'syi': 69, 'myi': 70, 'phi': 71,
+    'o': 72, 'yo': 73, 'to': 74, 'lo': 75, 'ko': 76, 'po': 77, 'ho': 78, 'so': 79, 'no': 80, 'mo': 81, 'tyo': 82, 'lyo': 83, 'kyo': 84, 'pyo': 85, 'hyi': 86, 'syi': 87, 'myi': 88, 'phi': 89,
 };
 
 const COLS = 18; // 画像の列数
 const CHAR_SIZE = 32; // 1文字のサイズ(px)
 
+// 【重要】文字数の多い順に並べ替えた配列を作成（pya等を ka や a より先に判定させるため）
+const sortedSyllables = Object.keys(charMap).sort((a, b) => b.length - a.length);
+
 // --- 2. 辞書データ ---
-// 単語(word)とその意味(meaning)のリストです。
 const dictionary = [
     { word: "aria", meaning: "こんにちは。[kaza]と一緒に使われることが多いです。" },
     { word: "kaza", meaning: "世界。または人々。" },
     { word: "fina", meaning: "さようなら。" },
-    { word: "runa", meaning: "美しい。" }
+    { word: "pyaka", meaning: "テスト用の単語です。" } // 例として追加
 ];
 
 // --- 3. DOM要素の取得 ---
@@ -68,23 +67,41 @@ function showDetail(targetWord) {
 
     detailWord.textContent = item.word;
     
-    // オリジナル文字（スプライト）の生成
+    // オリジナル文字（スプライト）の生成【ここが大きく変わりました】
     detailOriginalFont.innerHTML = '';
-    for (let char of item.word.toLowerCase()) {
-        if (charMap[char] !== undefined) {
-            const index = charMap[char];
-            const x = -(index % COLS) * CHAR_SIZE;
-            const y = -Math.floor(index / COLS) * CHAR_SIZE;
-            
-            const span = document.createElement('span');
-            span.className = 'custom-char';
-            span.style.backgroundPosition = `${x}px ${y}px`;
-            detailOriginalFont.appendChild(span);
+    let wordStr = item.word.toLowerCase();
+    let index = 0;
+
+    while (index < wordStr.length) {
+        let matched = false;
+
+        // 文字数の多い音節から順にマッチするか確認する
+        for (let syllable of sortedSyllables) {
+            if (wordStr.startsWith(syllable, index)) {
+                // マッチした音節の画像を表示
+                const charIndex = charMap[syllable];
+                const x = -(charIndex % COLS) * CHAR_SIZE;
+                const y = -Math.floor(charIndex / COLS) * CHAR_SIZE;
+                
+                const span = document.createElement('span');
+                span.className = 'custom-char';
+                span.style.backgroundPosition = `${x}px ${y}px`;
+                detailOriginalFont.appendChild(span);
+
+                // マッチした文字数分だけ読み取り位置を進める
+                index += syllable.length;
+                matched = true;
+                break; // 次の文字へ
+            }
+        }
+
+        // charMapに登録されていない文字（記号など）があった場合は飛ばす
+        if (!matched) {
+            index++;
         }
     }
 
-    // 他単語へのジャンプリンクの処理（[単語] をリンク化する）
-    // 例: "意味テキストの中の [kaza] をリンクにします"
+    // 他単語へのジャンプリンクの処理
     let meaningHtml = item.meaning.replace(/\[(.*?)\]/g, (match, wordName) => {
         return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
     });
