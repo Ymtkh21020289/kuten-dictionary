@@ -6,6 +6,7 @@ const charMap = {
     'u': 36, 'yu': 37, 'tu': 38, 'lu': 39, 'ku': 40, 'pu': 41, 'hu': 42, 'su': 43, 'nu': 44, 'mu': 45, 'tyu': 46, 'lyu': 47, 'kyu': 48, 'pyu': 49, 'hyu': 50, 'syu': 51, 'myu': 52, 'phu': 53,
     'e': 54, 'ye': 55, 'te': 56, 'le': 57, 'ke': 58, 'pe': 59, 'he': 60, 'se': 61, 'ne': 62, 'me': 63, 'tyi': 64, 'lyi': 65, 'kyi': 66, 'pyi': 67, 'hyi': 68, 'syi': 69, 'myi': 70, 'phi': 71,
     'o': 72, 'yo': 73, 'to': 74, 'lo': 75, 'ko': 76, 'po': 77, 'ho': 78, 'so': 79, 'no': 80, 'mo': 81, 'tyo': 82, 'lyo': 83, 'kyo': 84, 'pyo': 85, 'hyi': 86, 'syi': 87, 'myi': 88, 'phi': 89,
+    'mm': 90, 'y': 91, 't': 92, 'l': 93, 'k': 94, 'p': 95, 'h': 96, 's': 97, 'n': 98, 'm': 99, 'nn': 100,
 };
 
 const COLS = 18; // 画像の列数
@@ -16,9 +17,9 @@ const sortedSyllables = Object.keys(charMap).sort((a, b) => b.length - a.length)
 
 // --- 2. 辞書データ ---
 const dictionary = [
-    { word: "aria", meaning: "こんにちは。[kaza]と一緒に使われることが多いです。" },
-    { word: "kaza", meaning: "世界。または人々。" },
-    { word: "fina", meaning: "さようなら。" },
+    { word: "mi", meaning: "私（一人称）" },
+    { word: "yoti", meaning: "あなた" },
+    { word: "", meaning: "" },
     { word: "pyaka", meaning: "テスト用の単語です。" } // 例として追加
 ];
 
