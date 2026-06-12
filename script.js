@@ -19,8 +19,8 @@ const sortedSyllables = Object.keys(charMap).sort((a, b) => b.length - a.length)
 const dictionary = [
     { word: "mi", meaning: "私（一人称）" },
     { word: "yoti", meaning: "あなた" },
-    { word: "saki", meaning: "彼（男性三人称）" },
-    { word: "sali", meaning: "彼女（女性三人称）" } // 例として追加
+    { word: "saki", meaning: "彼（男性三人称）彼ら（三人称複数形）" },
+    { word: "sali", meaning: "彼女（女性三人称）\n彼ら（三人称複数形）\n\n「彼ら」を表す時は[saki]を使うのが一般的である。" } // 例として追加
 ];
 
 // --- 3. DOM要素の取得 ---
