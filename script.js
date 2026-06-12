@@ -103,9 +103,11 @@ function showDetail(targetWord) {
     }
 
     // 他単語へのジャンプリンクの処理
-    let meaningHtml = item.meaning.replace(/\[(.*?)\]/g, (match, wordName) => {
-        return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
-    });
+    let meaningHtml = item.meaning
+        .replace(/\r?\n/g, '<br>') // ←★この1行を追加（改行コードを<br>に変換）
+        .replace(/\[(.*?)\]/g, (match, wordName) => {
+            return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
+        });
     
     detailMeaning.innerHTML = meaningHtml;
 }
