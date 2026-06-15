@@ -17,7 +17,7 @@ const sortedSyllables = Object.keys(charMap).sort((a, b) => b.length - a.length)
 
 // --- 2. 辞書データ ---
 const dictionary = [
-    { word: "mi", meaning: "私（一人称）" },
+    { word: "mi", meaning: "私（一人称）", example: "mi lu puka.（私は歩く）" },
     { word: "yoti", meaning: "あなた" },
     { word: "saki", meaning: "彼（男性三人称）\n彼ら（三人称複数形）" },
     { word: "sali", meaning: "彼女（女性三人称）\n彼ら（三人称複数形）\n\n「彼ら」を表す時は[saki]を使うのが一般的である。" }, // 例として追加
@@ -111,6 +111,27 @@ function showDetail(targetWord) {
         });
     
     detailMeaning.innerHTML = meaningHtml;
+
+    if (item.examples && item.examples.length > 0) {
+        exampleBox.classList.remove('hidden'); // 例文エリアを表示
+        detailExamples.innerHTML = ''; // 中身をリセット
+        
+        item.examples.forEach(exText => {
+            // 例文の中でも改行と [単語] のリンク機能を有効にする
+            let exHtml = exText
+                .replace(/\r?\n/g, '<br>')
+                .replace(/\[(.*?)\]/g, (match, wordName) => {
+                    return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
+                });
+                
+            const li = document.createElement('li');
+            li.innerHTML = exHtml;
+            detailExamples.appendChild(li);
+        });
+    } else {
+        // 例文がない単語の場合はエリアごと非表示にする
+        exampleBox.classList.add('hidden');
+    }
 }
 
 // 起動
