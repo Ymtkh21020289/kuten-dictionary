@@ -96,3 +96,29 @@ body {
 .word-link:hover {
     color: darkblue;
 }
+
+.example-box {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f8ff; /* 薄い青色（お好みで変更してください） */
+    border-left: 4px solid #007bff; /* 左側の青い線 */
+    border-radius: 4px;
+}
+
+.example-box h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.example-box ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.example-box li {
+    margin-bottom: 8px;
+}
