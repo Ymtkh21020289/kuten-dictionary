@@ -131,3 +131,8 @@ body {
     display: inline-block;
     vertical-align: middle; /* ← この1行を追加 */
 }
+
+.custom-space {
+    display: inline-block;
+    width: 16px; /* ← ここで空白の広さを調整できます */
+}
