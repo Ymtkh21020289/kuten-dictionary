@@ -122,3 +122,12 @@ body {
 .example-box li {
     margin-bottom: 8px;
 }
+
+.custom-char {
+    width: 32px;
+    height: 32px;
+    background-image: url('font.png');
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle; /* ← この1行を追加 */
+}
