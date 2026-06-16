@@ -59,8 +59,14 @@ function textToSpriteHtml(text) {
         }
 
         if (!matched) {
-            // charMapにない文字（スペース、記号、日本語など）はそのままテキストとして出力
-            html += text[index];
+            const currentChar = text[index];
+            // 半角スペースまたは全角スペースの場合
+            if (currentChar === ' ' || currentChar === ' ') {
+                html += `<span class="custom-space"></span>`;
+            } else {
+                // その他の記号や日本語はそのまま出力
+                html += currentChar;
+            }
             index++;
         }
     }
