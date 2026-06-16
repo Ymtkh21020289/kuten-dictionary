@@ -17,12 +17,13 @@ const sortedSyllables = Object.keys(charMap).sort((a, b) => b.length - a.length)
 
 // --- 2. 辞書データ ---
 const dictionary = [
-    { word: "mi", meaning: "私（一人称）", examples: ["[mi] [lu] [puka].（私は歩く）"] },
+    { word: "mi", meaning: "私（一人称）", examples: ["{mi lu puka.} \n[mi] [lu] [puka].（私は歩く）"] },
     { word: "yoti", meaning: "あなた" },
     { word: "saki", meaning: "彼（男性三人称）\n彼ら（三人称複数形）" },
     { word: "sali", meaning: "彼女（女性三人称）\n彼ら（三人称複数形）\n\n「彼ら」を表す時は[saki]を使うのが一般的である。" }, // 例として追加
     { word: "kuten", meaning: "言語" },
     { word: "lu", meaning: "〜は、〜が（主語を前に伴う助詞）" },
+    { word: "cho", meaning: "〜を（目的語を前に伴う助詞）" },
     { word: "puka", meaning: "歩く" }
 ];
 
@@ -34,6 +35,37 @@ const placeholder = document.getElementById('placeholder');
 const detailWord = document.getElementById('detailWord');
 const detailOriginalFont = document.getElementById('detailOriginalFont');
 const detailMeaning = document.getElementById('detailMeaning');
+
+// --- 追加：ローマ字をオリジナル文字（画像）に変換する関数 ---
+function textToSpriteHtml(text) {
+    let html = '';
+    let wordStr = text.toLowerCase();
+    let index = 0;
+
+    while (index < wordStr.length) {
+        let matched = false;
+
+        for (let syllable of sortedSyllables) {
+            if (wordStr.startsWith(syllable, index)) {
+                const charIndex = charMap[syllable];
+                const x = -(charIndex % COLS) * CHAR_SIZE;
+                const y = -Math.floor(charIndex / COLS) * CHAR_SIZE;
+                
+                html += `<span class="custom-char" style="background-position: ${x}px ${y}px;"></span>`;
+                index += syllable.length;
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched) {
+            // charMapにない文字（スペース、記号、日本語など）はそのままテキストとして出力
+            html += text[index];
+            index++;
+        }
+    }
+    return html;
+}
 
 // --- 4. 初期化処理 ---
 function init() {
@@ -71,59 +103,32 @@ function showDetail(targetWord) {
 
     detailWord.textContent = item.word;
     
-    // オリジナル文字（スプライト）の生成【ここが大きく変わりました】
-    detailOriginalFont.innerHTML = '';
-    let wordStr = item.word.toLowerCase();
-    let index = 0;
+    // ▼ ここをスッキリ書き換え（先ほどの関数を使用）
+    detailOriginalFont.innerHTML = textToSpriteHtml(item.word);
 
-    while (index < wordStr.length) {
-        let matched = false;
-
-        // 文字数の多い音節から順にマッチするか確認する
-        for (let syllable of sortedSyllables) {
-            if (wordStr.startsWith(syllable, index)) {
-                // マッチした音節の画像を表示
-                const charIndex = charMap[syllable];
-                const x = -(charIndex % COLS) * CHAR_SIZE;
-                const y = -Math.floor(charIndex / COLS) * CHAR_SIZE;
-                
-                const span = document.createElement('span');
-                span.className = 'custom-char';
-                span.style.backgroundPosition = `${x}px ${y}px`;
-                detailOriginalFont.appendChild(span);
-
-                // マッチした文字数分だけ読み取り位置を進める
-                index += syllable.length;
-                matched = true;
-                break; // 次の文字へ
-            }
-        }
-
-        // charMapに登録されていない文字（記号など）があった場合は飛ばす
-        if (!matched) {
-            index++;
-        }
-    }
-
-    // 他単語へのジャンプリンクの処理
+    // 他単語へのジャンプリンクと改行の処理
     let meaningHtml = item.meaning
-        .replace(/\r?\n/g, '<br>') // ←★この1行を追加（改行コードを<br>に変換）
+        .replace(/\r?\n/g, '<br>')
         .replace(/\[(.*?)\]/g, (match, wordName) => {
             return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
         });
     
     detailMeaning.innerHTML = meaningHtml;
 
+    // 例文の表示処理
     if (item.examples && item.examples.length > 0) {
-        exampleBox.classList.remove('hidden'); // 例文エリアを表示
-        detailExamples.innerHTML = ''; // 中身をリセット
+        exampleBox.classList.remove('hidden');
+        detailExamples.innerHTML = '';
         
         item.examples.forEach(exText => {
-            // 例文の中でも改行と [単語] のリンク機能を有効にする
             let exHtml = exText
                 .replace(/\r?\n/g, '<br>')
                 .replace(/\[(.*?)\]/g, (match, wordName) => {
                     return `<span class="word-link" onclick="showDetail('${wordName}')">${wordName}</span>`;
+                })
+                // ▼▼ ここを追加： {文字列} をオリジナル文字に変換 ▼▼
+                .replace(/\{(.*?)\}/g, (match, originalText) => {
+                    return textToSpriteHtml(originalText);
                 });
                 
             const li = document.createElement('li');
@@ -131,7 +136,6 @@ function showDetail(targetWord) {
             detailExamples.appendChild(li);
         });
     } else {
-        // 例文がない単語の場合はエリアごと非表示にする
         exampleBox.classList.add('hidden');
     }
 }
