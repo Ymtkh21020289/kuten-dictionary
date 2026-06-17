@@ -21,7 +21,7 @@ const dictionary = [
     { word: "yoti", meaning: "あなた" },
     { word: "saki", meaning: "彼（男性三人称）\n彼ら（三人称複数形）" },
     { word: "sali", meaning: "彼女（女性三人称）\n彼ら（三人称複数形）\n\n「彼ら」を表す時は[saki]を使うのが一般的である。" }, // 例として追加
-    { word: "kuten", meaning: "言語" },
+    { word: "kutenn", meaning: "言語" },
     { word: "lu", meaning: "〜は、〜が（主語を前に伴う助詞）" },
     { word: "tyo", meaning: "〜を（目的語を前に伴う助詞）" },
     { word: "puka", meaning: "歩く" }
