@@ -24,7 +24,8 @@ const dictionary = [
     { word: "kutenn", meaning: "言語" },
     { word: "lu", meaning: "〜は、〜が（主語を前に伴う助詞）" },
     { word: "tyo", meaning: "〜を（目的語を前に伴う助詞）" },
-    { word: "puka", meaning: "歩く" }
+    { word: "puka", meaning: "歩く" },
+    { word: "enn", meaning: "〜または〜" }
 ];
 
 // --- 3. DOM要素の取得 ---
